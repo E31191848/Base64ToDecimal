@@ -66,8 +66,9 @@ final class Base62
                 // check if contain operand character for count the value
                 if (preg_match('/[-\+\/\*]/', $int)) {
                     $int = $this->calculateString($int);
+                    if ($int == 'invalid') return 'invalid';
                 }
-                
+
                 $temp = [];
                 $base62 = '';
                 while ($int >= 1) {
@@ -106,27 +107,31 @@ final class Base62
         // clean special character
         $str = preg_replace('/[^A-Za-z0-9\-\+\/\*]/', '', $str);
 
-        // clean one first character in '+ * /' if not started by string
-        $check = true;
-        while ($check) {
-            if(preg_match('/[+\/\*]/', $str[0])){
-                $str = ltrim($str, $str[0]);
-            } else {
-                $check = false;
+        if (preg_match('/[A-Za-z0-9]/', $str)) {
+            // clean one first character in '+ * /' if not started by string
+            $check = true;
+            while ($check) {
+                if (preg_match('/[+\/\*]/', $str[0])) {
+                    $str = ltrim($str, $str[0]);
+                } else {
+                    $check = false;
+                }
             }
-        }
 
-        // clean one last character in '+ - * /' if not followed by string
-        $check = true;
-        while ($check) {
-            if(preg_match('/[-\+\/\*]/', $str[-1])){
-                $str = rtrim($str, $str[-1]);
-            } else {
-                $check = false;
+            // clean one last character in '+ - * /' if not followed by string
+            $check = true;
+            while ($check) {
+                if (preg_match('/[-\+\/\*]/', $str[-1])) {
+                    $str = rtrim($str, $str[-1]);
+                } else {
+                    $check = false;
+                }
             }
-        }
 
-        return $str;
+            return $str;
+        } else {
+            return 0;
+        }
     }
 
     private function calculateString($str = null)

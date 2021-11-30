@@ -2,20 +2,6 @@
 include_once('./Base62.php');
 $base62 = new Base62();
 isset($_POST['base62']) ? $char = preg_replace('/[^A-Za-z0-9\-\+\/\*]/', '', $_POST['base62']) :  $char = '';
-switch (substr($char, -1)) {
-    case "+":
-        $char = rtrim($char, '+');
-        break;
-    case "-":
-        $char = rtrim($char, '-');
-        break;
-    case "*":
-        $char = rtrim($char, '*');
-        break;
-    case "/":
-        $char = rtrim($char, '/');
-        break;
-}
 ?>
 <!doctype html>
 <html lang="en">
@@ -224,6 +210,8 @@ switch (substr($char, -1)) {
             $("#base62").val(a + '/').focus();
         });
         $("#base62").keyup(function() {
+            var replace = $("#base62").val().replace(/[^A-Za-z0-9\-\+\/\*]/, "");
+            $("#base62").val(replace);
             $.ajax({
                 type: 'POST',
                 url: './api/decode.php',

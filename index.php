@@ -1,21 +1,7 @@
 <?php
 include_once('./Base62.php');
 $base62 = new Base62();
-isset($_POST['decimal']) ? $char = preg_replace('/[^A-Za-z0-9\-\+\/\*]/', '', $_POST['decimal']) :  $char = '';
-switch (substr($char, -1)) {
-    case "+":
-        $char = rtrim($char, '+');
-        break;
-    case "-":
-        $char = rtrim($char, '-');
-        break;
-    case "*":
-        $char = rtrim($char, '*');
-        break;
-    case "/":
-        $char = rtrim($char, '/');
-        break;
-}
+isset($_POST['decimal']) ? $char = preg_replace('/[^0-9\-\+\/\*]/', '', $_POST['decimal']) :  $char = '';
 ?>
 <!doctype html>
 <html lang="en">
@@ -224,6 +210,8 @@ switch (substr($char, -1)) {
             $("#decimal").val(a + '/').focus();
         });
         $("#decimal").keyup(function() {
+            var replace = $("#decimal").val().replace(/[^0-9\-\+\/\*]/, "");
+            $("#decimal").val(replace);
             $.ajax({
                 type: 'POST',
                 url: './api/encode.php',
